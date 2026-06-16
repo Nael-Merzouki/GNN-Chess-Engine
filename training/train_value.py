@@ -1,7 +1,10 @@
+from math import e
+
 import torch
 from torch_geometric.loader import DataLoader
 from models.model import ChessGNN
 from tqdm import tqdm
+import copy
 
 
 # =========================
@@ -49,13 +52,20 @@ optimizer = torch.optim.Adam(
 
 criterion = torch.nn.MSELoss()
 
-EPOCHS = 30
+EPOCHS = 75
 
 # ================
 # TRAINING LOOP
 # ================
 train_losses = []
 val_losses = []
+
+best_val_loss = float('inf')
+best_epoch = -1
+
+patience = 10
+min_delta = 0.001
+epochs_without_improvement = 0
 
 for epoch in range(EPOCHS):
 
@@ -98,11 +108,30 @@ for epoch in range(EPOCHS):
 
             loss = criterion(model(batch).squeeze(), batch.y_value.squeeze())
 
-            total_val_loss += loss
+            total_val_loss += loss.item()
     
         avg_val_loss = total_val_loss / len(val_loader)
 
         val_losses.append(avg_val_loss)
+    
+    # Implement early stopping
+    if avg_val_loss < best_val_loss - min_delta:
+        
+        best_val_loss = avg_val_loss
+        best_epoch = epoch
+
+        epochs_without_improvement = 0
+
+        torch.save(model.state_dict(), 'C:/Users/mnael/OneDrive/Documents/Nael/Code/VisualStudio/projects/chess-ai/experiments/best_value_model.pt')
+    else:
+
+        epochs_without_improvement += 1
+    
+    if epochs_without_improvement >= patience:
+
+        print(f'Early stopping at epoch {epoch+1}')
+
+        break
     
     print(f'Epoch {epoch+1}: train loss = {avg_train_loss:.4f} | val loss = {avg_val_loss:.4f}')
 
@@ -114,7 +143,12 @@ torch.save(model.state_dict(), OUTPUT_PATH)
 # ====================
 # VALIDATION & TEST
 # ====================
+BEST_MODEL_PATH = 'C:/Users/mnael/OneDrive/Documents/Nael/Code/VisualStudio/projects/chess-ai/experiments/best_value_model.pt'
+
+model.load_state_dict(torch.load(BEST_MODEL_PATH))
 model.eval()
+
+print(f'Loaded best model from epoch {best_epoch+1}.')
 
 val_loss = 0
 
@@ -131,3 +165,5 @@ with torch.no_grad():
         val_loss += loss.item()
 
 print(f'Validation Loss: {val_loss / len(val_loader)}')
+print(f'Train Loss History: {train_losses}')
+print(f'Validation Loss History: {val_losses}')

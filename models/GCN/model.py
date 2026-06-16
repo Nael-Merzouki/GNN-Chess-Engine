@@ -11,6 +11,8 @@ class ChessGNN(nn.Module):
         self.encoder = GraphEncoder(
             in_channels=8,
             hidden_dim=64,
+            num_layers=3,
+            heads=4
         )
 
         self.value_head = ValueHead(input_dim=64)
@@ -20,7 +22,6 @@ class ChessGNN(nn.Module):
         embedding = self.encoder(
             data.x,
             data.edge_index,
-            data.edge_type,
             data.batch
         )
 

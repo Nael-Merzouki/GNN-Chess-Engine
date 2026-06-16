@@ -8,8 +8,8 @@ from tqdm import tqdm
 # CONFIG
 # =================
 INPUT_PATH = 'C:/Users/mnael/OneDrive/Documents/Nael/Code/VisualStudio/projects/chess-ai/data/processed/filtered_positions.parquet'
-OUTPUT_PATH = 'C:/Users/mnael/OneDrive/Documents/Nael/Code/Vilabeled_positions.parquet'
-ENGINE_PATH = 'C:/Users/mnael/OneDrive/Documents/Nael/Code/VisualStudio/sualStudio/projects/chess-ai/data/processed/projects/chess-ai/data/stockfish/stockfish-windows-x86-64-avx2.exe'
+OUTPUT_PATH = 'C:/Users/mnael/OneDrive/Documents/Nael/Code/VisualStudio/projects/chess-ai/data/processed/labeled_positions.parquet'
+ENGINE_PATH = 'C:/Users/mnael/OneDrive/Documents/Nael/Code/VisualStudio/projects/chess-ai/data/stockfish/stockfish-windows-x86-64-avx2.exe'
 MAX_ROWS = 100
 
 # ==============

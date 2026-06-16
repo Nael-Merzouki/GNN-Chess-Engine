@@ -13,7 +13,7 @@ print('OUTPUT:\n')
 # =================
 PGN_PATH = Path('C:/Users/mnael/OneDrive/Documents/Nael/Code/VisualStudio/projects/chess-ai/data/raw/lichess_db_standard_rated_2026-01.pgn.zst')
 OUTPUT_PATH = Path('C:/Users/mnael/OneDrive/Documents/Nael/Code/VisualStudio/projects/chess-ai/data/processed/positions.parquet')
-MAX_GAMES = 5000
+MAX_GAMES = 15000
 
 # =================
 # OPEN STREAM
@@ -76,7 +76,6 @@ def extract_positions():
             
             if game_count % 100 == 0:
                 print(f'Processed {game_count} games | rows: {len(data)}')
-    
     finally:
         compressed_file.close()
     

@@ -9,7 +9,7 @@ from datasets.graph_dataset import fen_to_graph
 # ===============
 INPUT_PATH = Path('C:/Users/mnael/OneDrive/Documents/Nael/Code/VisualStudio/projects/chess-ai/data/processed/labeled_positions.parquet')
 OUTPUT_PATH = Path('C:/Users/mnael/OneDrive/Documents/Nael/Code/VisualStudio/projects/chess-ai/data/processed/graph_dataset.pt')
-MAX_ROWS = 10000
+MAX_ROWS = float('inf')
 
 # =====================
 # GRAPH CONVERSION

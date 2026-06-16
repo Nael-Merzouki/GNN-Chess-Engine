@@ -1,53 +1,42 @@
 import torch
+import torch.nn as nn
 import torch.nn.functional as F
-from torch_geometric.nn import (GCNConv, global_add_pool)
+from torch_geometric.nn import (GINEConv, global_add_pool)
 
 
-class GraphEncoder(torch.nn.Module):
+class GraphEncoder(nn.Module):
 
-    def __init__(self, in_channels=8, hidden_dim=128, num_layers=3, heads=4):
+    def __init__(self, in_channels=8, hidden_dim=64):
         super().__init__()
 
-        self.conv1 = GCNConv(in_channels, 64)
-        self.conv2 = GCNConv(64, 64)
+        mlp1 = nn.Sequential(
+            nn.Linear(in_channels, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim)
+        )
 
-        #self.convs = torch.nn.ModuleList()
+        mlp2 = nn.Sequential(
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim)
+        )
 
-        #self.convs.append(
-            #GATConv(
-                #in_channels=in_channels,
-                #out_channels=hidden_dim,
-                #heads=heads,
-                #dropout=0.2
-            #)
-        #
+        self.conv1 = GINEConv(mlp1, edge_dim=3)
 
-        #for _ in range(num_layers - 1):
-
-            #self.convs.append(
-                #GATConv(
-                    #in_channels=hidden_dim * heads,
-                    #out_channels=hidden_dim,
-                    #heads=heads,
-                    #dropout=0.2
-                #)
-            #)
+        self.conv2 = GINEConv(mlp2, edge_dim=3)
     
-    def forward(self, x, edge_index, batch):
-        
-        #for conv in self.convs:
+    def forward(self, x, edge_index, edge_attr, batch):
 
-            #x = conv(x, edge_index)
-
-            #x = F.relu(x)
-        
-        #graph_embedding = global_mean_pool(x, batch)
-
-        #return graph_embedding
-
-        x = self.conv1(x, edge_index)
+        x = self.conv1(x, edge_index, edge_attr)
         x = torch.relu(x)
-        x = self.conv2(x, edge_index)
+        
+        x = F.dropout(x, p=0.2, training=self.training)
+
+        x = self.conv2(x, edge_index, edge_attr)
         x = torch.relu(x)
 
-        return global_add_pool(x, batch)
+        x = F.dropout(x, p=0.2, training=self.training)
+
+        graph_embedding = global_add_pool(x, batch)
+
+        return graph_embedding

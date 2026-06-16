@@ -24,11 +24,14 @@ graphs = torch.load('C:/Users/mnael/OneDrive/Documents/Nael/Code/VisualStudio/pr
 #print(g.y_value)
 #print(g.policy)
 
-ys = torch.stack(
-    [g.y_value for g in graphs]
-).squeeze()
+#ys = torch.stack(
+#    [g.y_value for g in graphs]
+#).squeeze()
 
-print("min:", ys.min())
-print("max:", ys.max())
-print("mean:", ys.mean())
-print("std:", ys.std())
+#print("min:", ys.min())
+#print("max:", ys.max())
+#print("mean:", ys.mean())
+#print("std:", ys.std())
+
+#graphs = torch.load('C:/Users/mnael/OneDrive/Documents/Nael/Code/VisualStudio/projects/chess-ai/data/processed/graph_dataset.pt', weights_only=False)
+print(len(graphs))
