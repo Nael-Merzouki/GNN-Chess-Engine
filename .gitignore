@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+data/raw/
+data/processed/
+*.pt
+*.pth
+*.ckpt
+experiments/
+data/stockfish/
+.DS_Store
+Thumbs.db
